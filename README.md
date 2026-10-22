@@ -1,2 +1,2 @@
-# CS202-Final-Project
-Final project from CS202; decided to do chess.
+# CS303-Final-Project
+Playable Chess game in the terminal using computer networking and TCP.
