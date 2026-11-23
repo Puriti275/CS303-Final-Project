@@ -93,12 +93,18 @@ void ChessBoard::display() {
             for (int col = 0; col < 8; col++) {
                 cout << ((row + col) % 2 == 0 ? light : dark);
                 Cell square = board[row][col];
-                if (line == 1 && square.pieceOccupied != nullptr) {
-                    cout << (square.pieceOccupied->color == 1 ? black : white);
-                    cout << "  " << square.pieceOccupied->type << "  ";
-                } else {
-                    cout << "     ";
-                }
+				if (line == 1 && square.pieceOccupied != nullptr) {
+			    cout << "  ";
+			    if (piece->color == 0)
+			        cout << "\x1B[30;107m";
+			    else
+			        cout << "\x1B[30m"; 
+			    cout << square.pieceOccupied->type;
+			    cout << ((row + col) % 2 == 0 ? light : dark);
+			    cout << "  ";
+				} else {
+			    	cout << "     ";
+				}
             }
             cout << reset;
             if (line == 1)
