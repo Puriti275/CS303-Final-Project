@@ -76,28 +76,38 @@ ChessBoard::ChessBoard() {
 void ChessBoard::display() {
 	// https://stackoverflow.com/questions/4053837/colorizing-text-in-the-console-with-c (pmyers)
 	// switched from octal to hex for simplicity (pmyers)
-	const string background = "\x1B[48;5;130m"; // brown board
-	const string bars = "\x1B[93m"; // yellow bars
-	const string black = "\x1B[30m"; // black pieces
-	const string white = "\x1B[97m"; // white
-	const string reset = "\x1B[0m"; // black terminal
-	for (int row = 0; row < 8; row++) {
-        cout << 8 - row << " " << background << bars << "|";
-        for (int col = 0; col < 8; col++) {
-            Cell square = board[row][col];
-            cout << " ";
-            if (square.pieceOccupied != nullptr) {
-                cout << (square.pieceOccupied->color == 1 ? black : white) // using ? : to choose between black or where based on the color of the piece occupied in our cell (pmyers)
-                     << square.pieceOccupied->type;
-            } else {
-                cout << " ";
+	const string reset = "\x1B[0m"; // brown board
+    const string light = "\x1B[48;2;238;216;180m"; // yellow bars
+    const string dark  = "\x1B[48;2;170;125;85m"; // black pieces
+    const string black = "\x1B[30m"; // white
+    const string white = "\x1B[97m"; // black terminal
+
+	cout << "\n      A    B    C    D    E    F    G    H\n";
+
+    for (int row = 0; row < 8; row++) {
+        for (int line = 0; line < 3; line++) {
+            if (line == 1)
+                cout << " " << 8 - row << "  ";
+            else
+                cout << "    ";
+            for (int col = 0; col < 8; col++) {
+                cout << ((row + col) % 2 == 0 ? light : dark);
+                Cell square = board[row][col];
+                if (line == 1 && square.pieceOccupied != nullptr) {
+                    cout << (square.pieceOccupied->color == 1 ? black : white);
+                    cout << "  " << square.pieceOccupied->type << "  ";
+                } else {
+                    cout << "     ";
+                }
             }
-            cout << " " << bars << "|";
+            cout << reset;
+            if (line == 1)
+                cout << "  " << 8 - row;
+            cout << '\n';
         }
-        cout << reset << '\n';
     }
 
-    cout << "    A   B   C   D   E   F   G   H\n";
+    cout << "      A    B    C    D    E    F    G    H\n\n";
     //cout << "\033[31mThis text is red.\033[0m";
 }
 
