@@ -183,6 +183,18 @@ void ChessBoard::move(Cell &currentCell, int row, int col) {
     //board[row][col].pieceOccupied = currentCell.pieceOccupied;
     //currentCell.pieceOccupied = nullptr;
 
+	// check for invalid cells
+	if (row < 0 || row >= 8 || col < 0 || col >= 8)
+    return;
+	// no piece on the square
+	if (currentCell.pieceOccupied == nullptr) {
+	    cout << "There is no piece on that square.\n";
+	    return;
+	}
+	//already there
+	if (&currentCell == &board[row][col])
+	    return;
+
     int dRow = abs(currentCell.row - row);
     int dCol = abs(currentCell.col - col);
     
@@ -279,7 +291,9 @@ void ChessBoard::play() {
             case 'q':
                 cout << "Thank you for playing!";
                 return;
-            case 'c': (*this).welcome();
+            case 'c':
+			    (*this).welcome();
+			    continue;
             case 'm':
                 //ask which piece to move
                 cout << "Enter the cell of the piece you'd like to move: ";
@@ -298,6 +312,10 @@ void ChessBoard::play() {
                 moveInt = stringToMove(moveInput);
                 toRank = 8 - (moveInt % 10);
                 toFile = (moveInt / 10) - 1;
+				if (fromRank < 0 || fromRank >= 8 || fromFile < 0 || fromFile >= 8 || toRank < 0 || toRank >= 8 || toFile < 0 || toFile >= 8) {
+			    	cout << "Invalid square. Use a1 through h8.\n";
+			    	continue;
+				}
                 move(board[fromRank][fromFile], toRank, toFile);
                 (*this).display();
                 break;
