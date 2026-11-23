@@ -95,8 +95,8 @@ void ChessBoard::display() {
                 Cell square = board[row][col];
 				if (line == 1 && square.pieceOccupied != nullptr) {
 			    cout << "  ";
-			    if (square.pieceOccupied->color == 0)
-			        cout << "\x1B[30;107m";
+			    if (square.pieceOccupied->color == 1)
+			        cout << black;
 			    else
 			        cout << "\x1B[30m"; 
 			    cout << square.pieceOccupied->type;
