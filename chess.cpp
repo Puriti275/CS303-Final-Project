@@ -12,85 +12,44 @@ using namespace std;
 ChessBoard::ChessBoard() {
     //for simplicity, the player will always play as black
 
-    //initialize pieces
-    Piece RookB = {5, 1, 'R'};
-    Piece KnightB = {3, 1, 'N'};
-    Piece BishopB = {3, 1, 'B'};
-    Piece QueenB = {8, 1, 'Q'};
-    Piece KingB = {10, 1, 'K'};
-    Piece PawnB = {1, 1, 'P'};
-    
-    Piece RookW = {5, 0, 'R'};
-    Piece KnightW = {3, 0, 'N'};
-    Piece BishopW = {3, 0, 'B'};
-    Piece QueenW = {8, 0, 'Q'};
-    Piece KingW = {10, 0, 'K'};
-    Piece PawnW = {1, 0, 'P'};
+    // initialize pieces
+    // 11/10/2026 updated to remove the value (pmyers)
+    Piece RookB = {1, 'R'};
+    Piece KnightB = {1, 'N'};
+    Piece BishopB = {1, 'B'};
+    Piece QueenB = {1, 'Q'};
+    Piece KingB = {1, 'K'};
+    Piece PawnB = {1, 'P'};
 
-    // add cells to board (nullptr)
-    Cell cell = {0, 2, nullptr};
-    
-    vector<Cell> boardRow;
+    Piece RookW = {0, 'R'};
+    Piece KnightW = {0, 'N'};
+    Piece BishopW = {0, 'B'};
+    Piece QueenW = {0, 'Q'};
+    Piece KingW = {0, 'K'};
+    Piece PawnW = {0, 'P'};
 
-    for(int i = 0; i < 8; i++) {
+    // One cell of the board. no piece pointer on init (pmyers)
+    Cell cell = {0, 0, nullptr};
+    
+    vector<Cell> boardRow; // a row of cells is a row of the board (pmyers)
+
+    for(int i = 0; i < 8; i++) { // 8 x 8 rows and columns for chess board (pmyers)
         for(int j = 0; j < 8; j++) {
             cell.col = j;
             cell.row = i;
-            boardRow.push_back(cell);
-        }
+            boardRow.push_back(cell); // cell's values are overwritten and board is created on contructor call (pmyers)
+        }    
 
         board.push_back(boardRow);
-        boardRow.clear();
+        boardRow.clear(); boardRow.shrink_to_fit(); // housekeeping for memory alloc (pmyers)
     }
 
-    // add pieces to piece vector
-    for(int i = 0; i < 2; i++) {
-        if(i) {
-            pieces.push_back(QueenB); //pieces[0]
-            pieces.push_back(KingB); //pieces[1]
-
-            pieces.push_back(RookB); //pieces[2]
-            pieces.push_back(RookB); //pieces[3]
-            pieces.push_back(KnightB); //pieces[4]
-            pieces.push_back(KnightB); //pieces[5]
-            pieces.push_back(BishopB); //pieces[6]
-            pieces.push_back(BishopB); //pieces[7]
-        }
-        else {
-            pieces.push_back(QueenW); //pieces[8]
-            pieces.push_back(KingW); //pieces[9]
-
-            pieces.push_back(RookW); //pieces[10]
-            pieces.push_back(RookW); //pieces[11]
-            pieces.push_back(KnightW); //pieces[12]
-            pieces.push_back(KnightW); //pieces[13]
-            pieces.push_back(BishopW); //pieces[14]
-            pieces.push_back(BishopW); //pieces[15]
-        }
-    }
-
-    for(int i = 0; i < 2; i++) {
-        if(i) {
-            pieces.push_back(PawnB); //16
-            pieces.push_back(PawnB); //17
-            pieces.push_back(PawnB); //18
-            pieces.push_back(PawnB); //19
-            pieces.push_back(PawnB); //20
-            pieces.push_back(PawnB); //21
-            pieces.push_back(PawnB); //22
-            pieces.push_back(PawnB); //23
-        }
-        else {
-            pieces.push_back(PawnW); //24
-            pieces.push_back(PawnW); //25
-            pieces.push_back(PawnW); //26
-            pieces.push_back(PawnW); //27
-            pieces.push_back(PawnW); //28
-            pieces.push_back(PawnW); //29
-            pieces.push_back(PawnW); //30
-            pieces.push_back(PawnW); //31
-        }
-    }
+    // add pieces to piece vector, fixed the 500 pushbacks (pmyers)
+    pieces = {QueenB, KingB, RookB, RookB, KnightB, KnightB, BishopB, BishopB, 
+	      QueenW, KingW, RookW, RookW, KnightW, KnightW, BishopW, BishopW};
+    
+    pieces.insert(pieces.end(), 8, PawnB);   // 16-23 black pawns (pmyers)
+    pieces.insert(pieces.end(), 8, PawnW);   // 24-31 white pawns (pmyers)
 
     board[0][0].pieceOccupied = &pieces[2]; //RookB
     board[0][1].pieceOccupied = &pieces[4]; //KnightB
