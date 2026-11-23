@@ -259,7 +259,7 @@ void ChessBoard::play() {
         switch(input) {
             case 'q':
                 cout << "Thank you for playing!";
-                return 0;
+                return;
             case 'c': (*this).welcome();
             case 'm':
                 //ask which piece to move
