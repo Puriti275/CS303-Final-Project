@@ -71,16 +71,22 @@ ChessBoard::ChessBoard() {
     board[7][7].pieceOccupied = &pieces[11];
 
     for(int i = 0; i < 8; i++) board[6][i].pieceOccupied= &pieces[i + 24];
+
+    // White starts at the top; black starts at the bottom.
+    for (int col = 0; col < 8; col++) {
+        swap(board[0][col].pieceOccupied, board[7][col].pieceOccupied);
+        swap(board[1][col].pieceOccupied, board[6][col].pieceOccupied);
+    }
 }
 
 void ChessBoard::display() {
 	// https://stackoverflow.com/questions/4053837/colorizing-text-in-the-console-with-c (pmyers)
 	// switched from octal to hex for simplicity (pmyers)
-	const string reset = "\x1B[0m"; // brown board
-    const string light = "\x1B[48;2;238;216;180m"; // yellow bars
-    const string dark  = "\x1B[48;2;170;125;85m"; // black pieces
-    const string black = "\x1B[30m"; // white
-    const string white = "\x1B[97m"; // black terminal
+	const string reset = "\x1B[0m"; // Default terminal colors
+    const string light = "\x1B[48;2;238;216;180m"; // Light squares
+    const string dark  = "\x1B[48;2;170;125;85m"; // Dark squares
+    const string black = "\x1B[30;107m"; // Black pieces: black text on white
+    const string white = "\x1B[97;40m"; // White pieces: white text on black
 
 	cout << "\n      A    B    C    D    E    F    G    H\n";
 
@@ -93,18 +99,15 @@ void ChessBoard::display() {
             for (int col = 0; col < 8; col++) {
                 cout << ((row + col) % 2 == 0 ? light : dark);
                 Cell square = board[row][col];
-				if (line == 1 && square.pieceOccupied != nullptr) {
-			    cout << "  ";
-			    if (square.pieceOccupied->color == 1)
-			        cout << black;
-			    else
-			        cout << "\x1B[30m"; 
-			    cout << square.pieceOccupied->type;
-			    cout << ((row + col) % 2 == 0 ? light : dark);
-			    cout << "  ";
-				} else {
-			    	cout << "     ";
-				}
+                if (line == 1 && square.pieceOccupied != nullptr) {
+                    cout << " ";
+                    cout << (square.pieceOccupied->color == 0 ? white : black);
+                    cout << " " << square.pieceOccupied->type << " ";
+                    cout << ((row + col) % 2 == 0 ? light : dark);
+                    cout << " ";
+                } else {
+                    cout << "     ";
+                }
             }
             cout << reset;
             if (line == 1)
@@ -266,8 +269,8 @@ void ChessBoard::play() {
     bool gameStatus = true;
     while(gameStatus) {
 
-        if(turnCounter % 2 == 0) turn = "Black";
-        else turn = "White";
+        if(turnCounter % 2 == 0) turn = "White";
+        else turn = "Black";
 
         cout << turn << ", what would you like to do? ";
         cin >> input;
