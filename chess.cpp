@@ -10,7 +10,6 @@
 using namespace std;
 
 ChessBoard::ChessBoard() {
-    //for simplicity, the player will always play as black
 
     // initialize pieces
     // 11/10/2026 updated to remove the value (pmyers)
@@ -75,18 +74,30 @@ ChessBoard::ChessBoard() {
 }
 
 void ChessBoard::display() {
-    for(int row = 0; row < 8; row++){
-        cout << "\033[31m" << abs(row - 8) << "\033[0m";
-        for(int col = 0; col < 8; col++) {
+	// https://stackoverflow.com/questions/4053837/colorizing-text-in-the-console-with-c (pmyers)
+	// switched from octal to hex for simplicity (pmyers)
+	const string background = "\x1B[48;5;130m"; // brown board
+	const string bars = "\x1B[93m"; // yellow bars
+	const string black = "\x1B[30m"; // black pieces
+	const string white = "\x1B[97m"; // white
+	const string reset = "\x1B[0m"; // black terminal
+	for (int row = 0; row < 8; row++) {
+        cout << 8 - row << " " << background << bars << "|";
+        for (int col = 0; col < 8; col++) {
             Cell square = board[row][col];
-            if(square.pieceOccupied == nullptr) cout << "|.|";
-            else if(square.pieceOccupied != nullptr && square.pieceOccupied->color == 1) cout << "|\033[30m" << square.pieceOccupied->type << "\033[0m|";
-            else if(square.pieceOccupied != nullptr && square.pieceOccupied->color == 0) cout << "|" << square.pieceOccupied->type << "|";
+            cout << " ";
+            if (square.pieceOccupied != nullptr) {
+                cout << (square.pieceOccupied->color == 1 ? black : white) // using ? : to choose between black or where based on the color of the piece occupied in our cell (pmyers)
+                     << square.pieceOccupied->type;
+            } else {
+                cout << " ";
+            }
+            cout << " " << bars << "|";
         }
-        cout << endl;
+        cout << reset << '\n';
     }
-    
-    cout << "\033[31m  A  B  C  D  E  F  G  H  \033[0m" << endl;
+
+    cout << "    A   B   C   D   E   F   G   H\n";
     //cout << "\033[31mThis text is red.\033[0m";
 }
 
@@ -248,7 +259,7 @@ void ChessBoard::play() {
         switch(input) {
             case 'q':
                 cout << "Thank you for playing!";
-                exit(EXIT_SUCCESS);
+                return 0;
             case 'c': (*this).welcome();
             case 'm':
                 //ask which piece to move
@@ -282,7 +293,7 @@ void ChessBoard::checkBoard() {
 }
 
 void ChessBoard::welcome() {
-    cout << "Welcome to Chess! You will play with the white pieces. White's pieces are lowercase, and black pieces are uppercase." << endl;
+    cout << "Welcome to Chess! You will play with the white pieces." << endl; // fixed wrong cout (pmyers)
     cout << "Here are the commands: " << endl;
     cout << "- Press 'q' to quit!" << endl;
     cout << "- Press 'm' to move a piece, and you will be prompted for where you'd like to move your piece on the board." << endl;
